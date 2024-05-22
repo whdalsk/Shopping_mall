@@ -1,0 +1,28 @@
+
+body {
+  align-items: center;
+  background-position: center;
+  
+ 
+}
+
+.mb-3 {
+	font-family: "Open Sans", Helvetica, Arial, sans-serif;
+}
+
+.input-form {
+	     	font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  			font-size: 20px;
+		  max-width: 680px;
+		  
+		  margin-top: 150px;
+		  padding: 32px;
+		
+		  background: #ecf0f3;
+		  -webkit-border-radius: 10px;
+		  -moz-border-radius: 10px;
+		  border-radius: 10px;
+		  -webkit-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+		  -moz-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+		  box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15)
+		}

@@ -1,0 +1,237 @@
+-- 로그인 테이블
+create table c_login(
+id varchar2(20) primary key,
+pw varchar2(30) not null
+);
+
+-- 회원가입 정보 테이블
+create table c_member(
+id varchar2(20) primary key,
+pw varchar2(30) not null,
+phone varchar2(13) not null,
+email varchar2(30) not null,
+zipcode varchar2(5) not null,
+adress1 varchar2(500) not null,
+adress2 varchar2(500) not null
+);
+
+--로그인 테이블 id가 회원가입 테이블 id 참조
+alter table c_login add constraint c_login_code_fk
+foreign key(id) references c_member(id) on delete cascade;
+
+-- 상품목록 테이블
+create table c_product(
+--고유 번호
+code number(4) primary key,
+--상품 이름
+name varchar2(500) not null,
+--상품 한 줄 설명
+content varchar2(500) not null,
+--상품 가격
+price number(10) not null,
+--상품 이미지 url
+image varchar2(100) not null,
+--상품 등록 날짜
+wdate date not null,
+--상품 조회수
+hit number(4) default 0,
+--상품 찜 여부
+likes number(1) default 0,
+--상품 좋아요 수
+thumps_up number(4) default 0
+);
+
+--상품리뷰 시퀀스
+create sequence c_product_seq ;
+
+--상품리뷰 테이블
+create table c_productreply(
+num number(4) primary key,
+writer varchar2(20) not null,
+content varchar2(500)not null,  
+likes number(4) default 0,
+code number(4) not null
+);
+
+--상품리뷰 테이블 code가 상품목록 테이블 code 참조
+alter table c_productreply add constraint c_productreply_code_fk
+foreign key(code) references c_product(code) on delete cascade;
+
+--장바구니 목록 시퀀스
+create sequence c_cart_seq;
+
+--장바구니 목록
+create table c_cart(
+order_num number(4) primary key,
+product_num number(4) not null,
+member_id varchar2(20) not null,
+name varchar2(500) not null,
+price number(10) not null,
+image varchar2(100) not null,
+cnt number(2) default 1
+);
+
+--장바구니 목록 테이블 product_num이 상품목록 테이블 code 참조
+alter table c_cart add constraint c_cart_product_num_fk
+foreign key(product_num) references c_product(code) on delete cascade;
+
+--좋아요 테이블
+create table thumb_up(
+code number(4) not null,
+id varchar2(20) not null,
+FOREIGN KEY (code) REFERENCES c_product(id),
+FOREIGN KEY (id) REFERENCES c_member(product_id)
+);
+
+--1:1문의 테이블
+create table contact(
+name varchar2(10) not null,
+email varchar2(30) not null,
+subject varchar2(20) not null,
+content varchar2(500) not null,
+connum number(5) primary key
+);
+
+CREATE SEQUENCE contact_seq
+START WITH 1
+INCREMENT BY 1
+NOCACHE;
+
+--FAQ 테이블
+create table faq(
+faq_num number(4) primary key,
+question varchar2(500) not null,
+detail varchar2(500) not null
+);
+
+--FAQ 시퀀스
+create sequence faq_seq;
+
+--상품 목록 insert
+insert into c_product values(6001,'스카치 다용도 테이프','스카치 다용도 테이프 18mm x 30m',12000,'img/1.jpg',sysdate,0,0,0);
+insert into c_product values(6002,'퍼퓸샴푸 클린코튼향','퍼퓸샴푸 클린코튼향 100ml 본품',10000,'img/kk.jpg',sysdate,0,0,0);
+insert into c_product values(6003,'브루클린 자수 모자 2종세트','글램공식 남녀공용 브루클린 자수 모자 2종세트',15000,'img/3.jpg',sysdate,0,0,0);
+insert into c_product values(6004,'가든잇 오리지널 화분 세트','가든잇 오리지널 화분 세트',8000,'img/4.jpg',sysdate,0,0,0);
+insert into c_product values(6005,'크리스탈 생수 무라벨','크리스탈 생수 무라벨 60병 먹는샘물',13000,'img/5.jpg',sysdate,0,0,0);
+insert into c_product values(6006,'설향딸기 중과','설향딸기 중과, 500g, 1팩',8500,'img/str.jpg',sysdate,0,0,0);
+insert into c_product values(6007,'키즈팡팡 소꿉놀이','키즈팡팡 피크닉 종합 소꿉놀이',12000,'img/7.jpg',sysdate,0,0,0);
+insert into c_product values(6008,'곰곰 손질 갈치','곰곰 손질 갈치, 700g, 1개',8000,'img/8.jpg',sysdate,0,0,0);
+insert into c_product values(6009,'동원 동그랑땡','동원 동그랑땡 (냉동), 710g, 1개',5500,'img/9.jpg',sysdate,0,0,0);
+insert into c_product values(6010,'호박고구마','베니하루카 꿀고구마 호박고구마',12800,'img/10.jpg',sysdate,0,0,0);
+insert into c_product values(6011,'청정원 허니간장치킨','청정원 순살바삭 허니간장치킨 (냉동), 300g, 2개',14800,'img/chi.jpg',sysdate,0,0,0);
+insert into c_product values(6012,'지우의 피카츄 친구들','지우의 피카츄 친구들',25800,'img/12.jpg',sysdate,0,0,0);
+insert into c_product values(6013,'스파크 분말세제','스파크 스마트클린 분말세제 리필',22200,'img/spa.jpg',sysdate,0,0,0);
+insert into c_product values(6014,'칠성사이다 제로','칠성사이다 제로, 210ml',13800,'img/sid.jpg',sysdate,0,0,0);
+insert into c_product values(6015,'창녕군농협 햅쌀','창녕군농협 황금 메뚜기쌀 2023년 햅쌀',30000,'img/sal.jpg',sysdate,0,0,0);
+insert into c_product values(6016,'꿀 사과','경북 홈골농원 꿀 사과',42000,'img/16.jpg',sysdate,0,0,0);
+insert into c_product values(6017,'세타필 로션','세타필 모이스춰라이징 로션, 500ml',10700,'img/17.jpg',sysdate,0,0,0);
+insert into c_product values(6018,'3겹 화장지','잘풀리는집 3겹 맥스소프트 화장지',18000,'img/hug.jpg',sysdate,0,0,0);
+insert into c_product values(6019,'농협안심한우 1등급','농협안심한우 정육 세절 1등급',11000,'img/cow.jpg',sysdate,0,0,0);
+insert into c_product values(6020,'맛있는 오뚜기밥','맛있는 오뚜기밥 발아현미',21000,'img/ric.jpg',sysdate,0,0,0);
+insert into c_product values(6021,'피죤 섬유유연제','피죤 레귤러 섬유유연제 옐로미모사 본품',16000,'img/pig.jpg',sysdate,0,0,0);
+insert into c_product values(6022,'코멧 빨래건조대','코멧 이동접이식 빨래건조대 특대형',24100,'img/lun.jpg',sysdate,0,0,0);
+insert into c_product values(6023,'아몬드 브리즈','블루다이아몬드 아몬드 브리즈 언스위트',23200,'img/aom.jpg',sysdate,0,0,0);
+insert into c_product values(6024,'루테인지아잔틴','아이클리어 루테인지아잔틴, 30정',33000,'img/rut.jpg',sysdate,0,0,0);
+insert into c_product values(6025,'동원 참치','동원 라이트 스탠다드 참치',17000,'img/fis.jpg',sysdate,0,0,0);
+insert into c_product values(6026,'오뚜기 진라면컵','오뚜기 진라면 매운맛 컵 65g',19300,'img/ram.jpg',sysdate,0,0,0);
+insert into c_product values(6027,'기초화장품 세트','기초화장품 스킨케어 5종 세트',35700,'img/cos.jpg',sysdate,0,0,0);
+insert into c_product values(6028,'맥심 아메리카노','맥심 카누 마일드 로스트 아메리카노',18100,'img/cof.jpg',sysdate,0,0,0);
+insert into c_product values(6029,'서울우유','서울우유 멸균 흰우유 1L',17200,'img/mil.jpg',sysdate,0,0,0);
+insert into c_product values(6030,'곰팡이 제거제','유한락스 멀티액션 곰팡이 제거제',10900,'img/rak.jpg',sysdate,0,0,0);
+insert into c_product values(6031,'AA건전지','벡셀 알카라인 콤보팩 AA건전지 24p',15000,'img/bex.jpg',sysdate,0,0,0);
+
+insert into c_product values(7001,'스카치 다용도 테이프','스카치 다용도 테이프 18mm x 30m',12000,'img/1.jpg',sysdate,0,0,0);
+insert into c_product values(7002,'퍼퓸샴푸 클린코튼향','퍼퓸샴푸 클린코튼향 100ml 본품',10000,'img/kk.jpg',sysdate,0,0,0);
+insert into c_product values(7003,'브루클린 자수 모자 2종세트','글램공식 남녀공용 브루클린 자수 모자 2종세트',15000,'img/3.jpg',sysdate,0,0,0);
+insert into c_product values(7004,'가든잇 오리지널 화분 세트','가든잇 오리지널 화분 세트',8000,'img/4.jpg',sysdate,0,0,0);
+insert into c_product values(7005,'크리스탈 생수 무라벨','크리스탈 생수 무라벨 60병 먹는샘물',13000,'img/5.jpg',sysdate,0,0,0);
+insert into c_product values(7006,'설향딸기 중과','설향딸기 중과, 500g, 1팩',8500,'img/str.jpg',sysdate,0,0,0);
+insert into c_product values(7007,'키즈팡팡 소꿉놀이','키즈팡팡 피크닉 종합 소꿉놀이',12000,'img/7.jpg',sysdate,0,0,0);
+insert into c_product values(7008,'곰곰 손질 갈치','곰곰 손질 갈치, 700g, 1개',8000,'img/8.jpg',sysdate,0,0,0);
+insert into c_product values(7009,'동원 동그랑땡','동원 동그랑땡 (냉동), 710g, 1개',5500,'img/9.jpg',sysdate,0,0,0);
+insert into c_product values(7010,'호박고구마','베니하루카 꿀고구마 호박고구마',12800,'img/10.jpg',sysdate,0,0,0);
+insert into c_product values(7011,'청정원 허니간장치킨','청정원 순살바삭 허니간장치킨 (냉동), 300g, 2개',14800,'img/chi.jpg',sysdate,0,0,0);
+insert into c_product values(7012,'지우의 피카츄 친구들','지우의 피카츄 친구들',25800,'img/12.jpg',sysdate,0,0,0);
+insert into c_product values(7013,'스파크 분말세제','스파크 스마트클린 분말세제 리필',22200,'img/spa.jpg',sysdate,0,0,0);
+insert into c_product values(7014,'칠성사이다 제로','칠성사이다 제로, 210ml',13800,'img/sid.jpg',sysdate,0,0,0);
+insert into c_product values(7015,'창녕군농협 햅쌀','창녕군농협 황금 메뚜기쌀 2023년 햅쌀',30000,'img/sal.jpg',sysdate,0,0,0);
+insert into c_product values(7016,'꿀 사과','경북 홈골농원 꿀 사과',42000,'img/16.jpg',sysdate,0,0,0);
+insert into c_product values(7017,'세타필 로션','세타필 모이스춰라이징 로션, 500ml',10700,'img/17.jpg',sysdate,0,0,0);
+insert into c_product values(7018,'3겹 화장지','잘풀리는집 3겹 맥스소프트 화장지',18000,'img/hug.jpg',sysdate,0,0,0);
+insert into c_product values(7019,'농협안심한우 1등급','농협안심한우 정육 세절 1등급',11000,'img/cow.jpg',sysdate,0,0,0);
+insert into c_product values(7020,'맛있는 오뚜기밥','맛있는 오뚜기밥 발아현미',21000,'img/ric.jpg',sysdate,0,0,0);
+insert into c_product values(7021,'피죤 섬유유연제','피죤 레귤러 섬유유연제 옐로미모사 본품',16000,'img/pig.jpg',sysdate,0,0,0);
+insert into c_product values(7022,'코멧 빨래건조대','코멧 이동접이식 빨래건조대 특대형',24100,'img/lun.jpg',sysdate,0,0,0);
+insert into c_product values(7023,'아몬드 브리즈','블루다이아몬드 아몬드 브리즈 언스위트',23200,'img/aom.jpg',sysdate,0,0,0);
+insert into c_product values(7024,'루테인지아잔틴','아이클리어 루테인지아잔틴, 30정',33000,'img/rut.jpg',sysdate,0,0,0);
+insert into c_product values(7025,'동원 참치','동원 라이트 스탠다드 참치',17000,'img/fis.jpg',sysdate,0,0,0);
+insert into c_product values(7026,'오뚜기 진라면컵','오뚜기 진라면 매운맛 컵 65g',19300,'img/ram.jpg',sysdate,0,0,0);
+insert into c_product values(7027,'기초화장품 세트','기초화장품 스킨케어 5종 세트',35700,'img/cos.jpg',sysdate,0,0,0);
+insert into c_product values(7028,'맥심 아메리카노','맥심 카누 마일드 로스트 아메리카노',18100,'img/cof.jpg',sysdate,0,0,0);
+insert into c_product values(7029,'서울우유','서울우유 멸균 흰우유 1L',17200,'img/mil.jpg',sysdate,0,0,0);
+insert into c_product values(7030,'곰팡이 제거제','유한락스 멀티액션 곰팡이 제거제',10900,'img/rak.jpg',sysdate,0,0,0);
+insert into c_product values(7031,'AA건전지','벡셀 알카라인 콤보팩 AA건전지 24p',15000,'img/bex.jpg',sysdate,0,0,0);
+
+insert into c_product values(8001,'스카치 다용도 테이프','스카치 다용도 테이프 18mm x 30m',12000,'img/1.jpg',sysdate,0,0,0);
+insert into c_product values(8002,'퍼퓸샴푸 클린코튼향','퍼퓸샴푸 클린코튼향 100ml 본품',10000,'img/kk.jpg',sysdate,0,0,0);
+insert into c_product values(8003,'브루클린 자수 모자 2종세트','글램공식 남녀공용 브루클린 자수 모자 2종세트',15000,'img/3.jpg',sysdate,0,0,0);
+insert into c_product values(8004,'가든잇 오리지널 화분 세트','가든잇 오리지널 화분 세트',8000,'img/4.jpg',sysdate,0,0,0);
+insert into c_product values(8005,'크리스탈 생수 무라벨','크리스탈 생수 무라벨 60병 먹는샘물',13000,'img/5.jpg',sysdate,0,0,0);
+insert into c_product values(8006,'설향딸기 중과','설향딸기 중과, 500g, 1팩',8500,'img/str.jpg',sysdate,0,0,0);
+insert into c_product values(8007,'키즈팡팡 소꿉놀이','키즈팡팡 피크닉 종합 소꿉놀이',12000,'img/7.jpg',sysdate,0,0,0);
+insert into c_product values(8008,'곰곰 손질 갈치','곰곰 손질 갈치, 700g, 1개',8000,'img/8.jpg',sysdate,0,0,0);
+insert into c_product values(8009,'동원 동그랑땡','동원 동그랑땡 (냉동), 710g, 1개',5500,'img/9.jpg',sysdate,0,0,0);
+insert into c_product values(8010,'호박고구마','베니하루카 꿀고구마 호박고구마',12800,'img/10.jpg',sysdate,0,0,0);
+insert into c_product values(8011,'청정원 허니간장치킨','청정원 순살바삭 허니간장치킨 (냉동), 300g, 2개',14800,'img/chi.jpg',sysdate,0,0,0);
+insert into c_product values(8012,'지우의 피카츄 친구들','지우의 피카츄 친구들',25800,'img/12.jpg',sysdate,0,0,0);
+insert into c_product values(8013,'스파크 분말세제','스파크 스마트클린 분말세제 리필',22200,'img/spa.jpg',sysdate,0,0,0);
+insert into c_product values(8014,'칠성사이다 제로','칠성사이다 제로, 210ml',13800,'img/sid.jpg',sysdate,0,0,0);
+insert into c_product values(8015,'창녕군농협 햅쌀','창녕군농협 황금 메뚜기쌀 2023년 햅쌀',30000,'img/sal.jpg',sysdate,0,0,0);
+insert into c_product values(8016,'꿀 사과','경북 홈골농원 꿀 사과',42000,'img/16.jpg',sysdate,0,0,0);
+insert into c_product values(8017,'세타필 로션','세타필 모이스춰라이징 로션, 500ml',10700,'img/17.jpg',sysdate,0,0,0);
+insert into c_product values(8018,'3겹 화장지','잘풀리는집 3겹 맥스소프트 화장지',18000,'img/hug.jpg',sysdate,0,0,0);
+insert into c_product values(8019,'농협안심한우 1등급','농협안심한우 정육 세절 1등급',11000,'img/cow.jpg',sysdate,0,0,0);
+insert into c_product values(8020,'맛있는 오뚜기밥','맛있는 오뚜기밥 발아현미',21000,'img/ric.jpg',sysdate,0,0,0);
+insert into c_product values(8021,'피죤 섬유유연제','피죤 레귤러 섬유유연제 옐로미모사 본품',16000,'img/pig.jpg',sysdate,0,0,0);
+insert into c_product values(8022,'코멧 빨래건조대','코멧 이동접이식 빨래건조대 특대형',24100,'img/lun.jpg',sysdate,0,0,0);
+insert into c_product values(8023,'아몬드 브리즈','블루다이아몬드 아몬드 브리즈 언스위트',23200,'img/aom.jpg',sysdate,0,0,0);
+insert into c_product values(8024,'루테인지아잔틴','아이클리어 루테인지아잔틴, 30정',33000,'img/rut.jpg',sysdate,0,0,0);
+insert into c_product values(8025,'동원 참치','동원 라이트 스탠다드 참치',17000,'img/fis.jpg',sysdate,0,0,0);
+insert into c_product values(8026,'오뚜기 진라면컵','오뚜기 진라면 매운맛 컵 65g',19300,'img/ram.jpg',sysdate,0,0,0);
+insert into c_product values(8027,'기초화장품 세트','기초화장품 스킨케어 5종 세트',35700,'img/cos.jpg',sysdate,0,0,0);
+insert into c_product values(8028,'맥심 아메리카노','맥심 카누 마일드 로스트 아메리카노',18100,'img/cof.jpg',sysdate,0,0,0);
+insert into c_product values(8029,'서울우유','서울우유 멸균 흰우유 1L',17200,'img/mil.jpg',sysdate,0,0,0);
+insert into c_product values(8030,'곰팡이 제거제','유한락스 멀티액션 곰팡이 제거제',10900,'img/rak.jpg',sysdate,0,0,0);
+insert into c_product values(8031,'AA건전지','벡셀 알카라인 콤보팩 AA건전지 24p',15000,'img/bex.jpg',sysdate,0,0,0);
+
+insert into c_product values(9001,'스카치 다용도 테이프','스카치 다용도 테이프 18mm x 30m',12000,'img/1.jpg',sysdate,0,0,0);
+insert into c_product values(9002,'퍼퓸샴푸 클린코튼향','퍼퓸샴푸 클린코튼향 100ml 본품',10000,'img/kk.jpg',sysdate,0,0,0);
+insert into c_product values(9003,'브루클린 자수 모자 2종세트','글램공식 남녀공용 브루클린 자수 모자 2종세트',15000,'img/3.jpg',sysdate,0,0,0);
+insert into c_product values(9004,'가든잇 오리지널 화분 세트','가든잇 오리지널 화분 세트',8000,'img/4.jpg',sysdate,0,0,0);
+insert into c_product values(9005,'크리스탈 생수 무라벨','크리스탈 생수 무라벨 60병 먹는샘물',13000,'img/5.jpg',sysdate,0,0,0);
+insert into c_product values(9006,'설향딸기 중과','설향딸기 중과, 500g, 1팩',8500,'img/str.jpg',sysdate,0,0,0);
+insert into c_product values(9007,'키즈팡팡 소꿉놀이','키즈팡팡 피크닉 종합 소꿉놀이',12000,'img/7.jpg',sysdate,0,0,0);
+insert into c_product values(9008,'곰곰 손질 갈치','곰곰 손질 갈치, 700g, 1개',8000,'img/8.jpg',sysdate,0,0,0);
+insert into c_product values(9009,'동원 동그랑땡','동원 동그랑땡 (냉동), 710g, 1개',5500,'img/9.jpg',sysdate,0,0,0);
+insert into c_product values(9010,'호박고구마','베니하루카 꿀고구마 호박고구마',12800,'img/10.jpg',sysdate,0,0,0);
+insert into c_product values(9011,'청정원 허니간장치킨','청정원 순살바삭 허니간장치킨 (냉동), 300g, 2개',14800,'img/chi.jpg',sysdate,0,0,0);
+insert into c_product values(9012,'지우의 피카츄 친구들','지우의 피카츄 친구들',25800,'img/12.jpg',sysdate,0,0,0);
+insert into c_product values(9013,'스파크 분말세제','스파크 스마트클린 분말세제 리필',22200,'img/spa.jpg',sysdate,0,0,0);
+insert into c_product values(9014,'칠성사이다 제로','칠성사이다 제로, 210ml',13800,'img/sid.jpg',sysdate,0,0,0);
+insert into c_product values(9015,'창녕군농협 햅쌀','창녕군농협 황금 메뚜기쌀 2023년 햅쌀',30000,'img/sal.jpg',sysdate,0,0,0);
+insert into c_product values(9016,'꿀 사과','경북 홈골농원 꿀 사과',42000,'img/16.jpg',sysdate,0,0,0);
+insert into c_product values(9017,'세타필 로션','세타필 모이스춰라이징 로션, 500ml',10700,'img/17.jpg',sysdate,0,0,0);
+insert into c_product values(9018,'3겹 화장지','잘풀리는집 3겹 맥스소프트 화장지',18000,'img/hug.jpg',sysdate,0,0,0);
+insert into c_product values(9019,'농협안심한우 1등급','농협안심한우 정육 세절 1등급',11000,'img/cow.jpg',sysdate,0,0,0);
+insert into c_product values(9020,'맛있는 오뚜기밥','맛있는 오뚜기밥 발아현미',21000,'img/ric.jpg',sysdate,0,0,0);
+insert into c_product values(9021,'피죤 섬유유연제','피죤 레귤러 섬유유연제 옐로미모사 본품',16000,'img/pig.jpg',sysdate,0,0,0);
+insert into c_product values(9022,'코멧 빨래건조대','코멧 이동접이식 빨래건조대 특대형',24100,'img/lun.jpg',sysdate,0,0,0);
+insert into c_product values(9023,'아몬드 브리즈','블루다이아몬드 아몬드 브리즈 언스위트',23200,'img/aom.jpg',sysdate,0,0,0);
+insert into c_product values(9024,'루테인지아잔틴','아이클리어 루테인지아잔틴, 30정',33000,'img/rut.jpg',sysdate,0,0,0);
+insert into c_product values(9025,'동원 참치','동원 라이트 스탠다드 참치',17000,'img/fis.jpg',sysdate,0,0,0);
+insert into c_product values(9026,'오뚜기 진라면컵','오뚜기 진라면 매운맛 컵 65g',19300,'img/ram.jpg',sysdate,0,0,0);
+insert into c_product values(9027,'기초화장품 세트','기초화장품 스킨케어 5종 세트',35700,'img/cos.jpg',sysdate,0,0,0);
+insert into c_product values(9028,'맥심 아메리카노','맥심 카누 마일드 로스트 아메리카노',18100,'img/cof.jpg',sysdate,0,0,0);
+insert into c_product values(9029,'서울우유','서울우유 멸균 흰우유 1L',17200,'img/mil.jpg',sysdate,0,0,0);
+insert into c_product values(9030,'곰팡이 제거제','유한락스 멀티액션 곰팡이 제거제',10900,'img/rak.jpg',sysdate,0,0,0);
+insert into c_product values(9031,'AA건전지','벡셀 알카라인 콤보팩 AA건전지 24p',15000,'img/bex.jpg',sysdate,0,0,0);

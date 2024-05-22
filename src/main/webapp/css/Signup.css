@@ -1,0 +1,22 @@
+
+body {
+  align-items: center;
+  background-position: center;
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  
+ 
+}
+
+.box {
+	background-color: #ecf0f3;
+}
+
+.myinput {
+	     border-radius:15px;
+		}
+		
+.mytitle {
+	font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  	font-size: 20px;
+}
